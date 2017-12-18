@@ -1,0 +1,1 @@
+[n,dist] -> [i,j,k,ii,kk,jj]: 3 + k <= n & 3 + kk <= n & 2 + k <= i & 2 + kk <= ii & 1 + i <= ii & 1 + j <= i & 1 + k <= j & 1 + jj <= j & 1 + k <= kk & 1 + jj <= ii & 1 + kk <= jj & i <= n & ii <= n & i + ii^2 + 2*kk <= i^2 + 2*j + ii & i^2 + 2*j + ii <= i + ii^2 + 2*kk & jj <= j & k <= kk & 0 <= k & 0 <= kk;

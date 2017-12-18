@@ -1,0 +1,148 @@
+\documentclass[12pt, a4paper]{report}
+
+\usepackage{amsfonts}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=Fuchsia,
+	filecolor=black,
+	linkcolor=Sepia,
+	urlcolor=blue
+}
+
+\titleformat{\chapter}{\normalfont\huge\bfseries}{\thechapter.}{10pt}{\huge\bfseries}
+
+
+% Title Page
+\title{Fourier-Motzkin extension to Multivariate Polynomial Integer Constraints}
+
+\author{Diogo Sampaio}
+
+\begin{document}
+
+\maketitle
+
+\begin{tabular}[c]{|c|c|p{0.5\linewidth}|}
+	\hline
+	2017 - 12 - 07 & Diogo Sampaio & First version\\
+	\hline
+\end{tabular}
+
+\tableofcontents
+
+\chapter{Introduction}
+Quantifier elimination is the process of removing existential variables of a given first-order formula, obtaining one that is simpler in the number of variables, and that implies the original formula.
+
+A very well known algorithm is the Fourier-Motzkin elimination process, that given a system (or formula) of inequalities removes one quantified variable by combining all of it's upper and lower bounds.
+
+For example, let the system:
+$$\exists x ~ | ~ 0 < y \land z < 1 \land y < x \land x < z$$
+In such formula, $x$ is a existential quantified variable, and $y, z$ are parameters. Using FME to remove variable $x$ from this formula requires to find it's upper and lower bounds. In this case we have the upper bound $$x < z$$ and the lower bound $$y < x.$$ For last $x$ is eliminated by isolating $x$ of each formula and combining lower with upper bounds such as:
+$$y < x < z \Rightarrow y < z$$
+generating the new system:
+$$0 < y \land z < 1 \land y < z.$$
+
+This algorithm is designed for linear systems, where all coefficients of the variable being eliminated are numeric values, and the inequality can be classified as either a upper or lower bound.
+
+When dealing with polynomials, variable coefficients might be symbolic expressions. In such case, all possible signs of the coefficient (positive, negative, or zero) must be explored.
+e.g. imagine the system:
+$$\exists x ~ | ~ a - 1 > 0 \land -b > 0 \land ax > 0 \land bx > 0$$
+when eliminating the variable $x$ it is required to classify the terms $ax > 0$ and $bx > 0$ as either upper or lower bounds of $x$. Not knowing the sign of the coefficients ($a, b$) requires to evaluate nine different combinations:
+$$a > 0 \land b > 0$$
+$$a > 0 \land b = 0$${\color{red}$$a > 0 \land b < 0$$}$$a = 0 \land b > 0$$
+$$a = 0 \land b = 0$$
+$$a = 0 \land b < 0$$
+$$a < 0 \land b > 0$$
+$$a < 0 \land b = 0$$
+$$a < 0 \land b < 0$$
+To avoid this branching we use an implementation of a theorem used in the positiveness test algorithm, proposed by Markus Schweighofer (\url{https://doi.org/10.1016/S0022-4049(01)00041-X}), to retrieve symbolic coefficient signs. Using such algorithm it is possible to infer that only the red assumption holds correct.
+
+The same positiveness test algorithm is of major importance when resolving system over integer variables, instead of reals. It is used in many other techniques required to preserve the precision of the simplified formula, such as extending the normalization (\url{https://doi.org/10.1145/125826.125848}) ~ technique to symbolic expressions, perform convex hull detection and remove redundant constraints.
+
+Our C++ implementation uses GiNaC (\url{https://www.ginac.de/}) to manipulate symbolic expressions and GLPK to implement the positiveness test (\url{https://www.gnu.org/software/glpk}).
+
+
+For further details please refer to \emph{Profile Guided Hybrid Compilation} \S2.7 and \S5. (\url{https://hal.archives-ouvertes.fr/tel-01428425})
+
+\chapter{Access to it}
+\section{Code access and description}
+The code is publicly available for download at:
+
+\url{https://gitlab.inria.fr/nunessam/pghc.git}
+
+Source-code folders contents:
+\begin{itemize}
+	\item doc: this document.
+	\item FM: the FME and a stand-alone positiveness tester.
+	\item converters: distinct converters to generate input to other quantifier-elimination tools, such as
+	\begin{itemize}
+	\item QEPCAD: \url{https://github.com/PetterS/qepcad}
+	\item reduce/redlog: \url{https://sourceforge.net/projects/reduce-algebra/}
+	\end{itemize}
+	as well as input to barvinok \url{http://barvinok.gforge.inria.fr/} where it tries to discover if it is possible to prove if a system of constraints define a empty / absurd space. For such task it computes maximum and minimum values of polynomials inside a convex polyhedron space (see \url{https://icps.u-strasbg.fr/upload/icps-2006-173.pdf}).
+	\item packages: Dockerfile for a painless process of install.
+\end{itemize}
+\section{Compiling requirements}
+\begin{itemize}
+	\item C++11 compatible compiler
+	\item GNU make, GiNaC, GLPK
+\end{itemize}
+{\color{red}OBS: These tools where tested solely in \textbf{Linux}.}
+
+\chapter{How to use}
+\section{Fourier-Motzkin elimination - Text IO}
+\subsection{Inputs}
+The application can either read a input text file or it can read from the standard input stream. Example files can be seen with extension \texttt{.in} inside the folder FM. The binary file it self is called {\color{red}\textbf{\texttt{Simplifier}}}.
+\subsection{Input format}
+The input formula must be given in a disjunction of systems, where each system is a conjunction of terms. In a bottom up manner we have that:
+\begin{itemize}
+	\item A \emph{term} is a INTEGER VALUED equality or inequality, such as:	\begin{verbatim}4*x^2 - 5*y < 0
+x > 0
+y <= s
+N*h - 5*z == 0
+	\end{verbatim}
+	\item A system of terms declares all quantified variables, parameter such as the example in the file \texttt{FM/POL.in}:
+	\begin{verbatim}[n]->[jj,j,k,kk,ii,i]: -kk^2+j+j^2-kk-2*ii+2*i = 0 &
+		k >= 0 & -1-k+n >= 0 &
+		i >= 0 & -1+k-i >= 0 &
+		-1+j-k >= 0 & -1-j+n >= 0 &
+		kk >= 0 & -1-kk+n >= 0 &
+		ii >= 0 & -1+kk-ii >= 0 &
+		-1+jj-kk >= 0 & -1-jj+n >= 0 &
+		-1-k+kk >= 0 & -1-ii+i >= 0 &
+		n >= 0;
+		\end{verbatim}
+		The distinct parts of the system are:
+		\begin{itemize}
+		\item A system starts with a list, comma separated, of parameters, e.g.: \texttt{[n]}, \texttt{[nn,n, z, b]}, \texttt{[]}.
+		\item An arrow \texttt{->} describing "mapping from".
+		\item A list of the quantified variables to be eliminated, comma separated e.g.: \texttt{[jj,j,k,kk,ii,i]}, \texttt{[a, bc,c]}, \texttt{[]}.
+		\item A list of polynomial terms, initialized by a colon(\texttt{:}) and separated by the logic and symbol (\texttt{\&}) and terminated by a semi-colon (\texttt{;}).
+	\end{itemize}
+
+	\item Multiple systems can be represented in a single input file, being interpreted as an \texttt{logic or} of each one of the systems:
+	\begin{verbatim}
+	[]->[x]: x < 1 & x > 0;
+	[x]->[a]: a < x & a > 3*x-4;
+	\end{verbatim}
+	is interpreted as $\{\exists x \in \mathbb{Z} | x < 1 \land x > 0\} \lor \{\exists a \in \mathbb{Z} | a < x \land 3x-4 < a\}$.
+\end{itemize}
+
+\section{Fourier-Motzlin elimination - Python Interface}
+
+In the folder
+
+\section{Schweighofer Tester}
+In the same FM folder, the binary file \texttt{st} allows to interactively play with a single system of constraints. It can read from input files or iteratively add expressions to the system. It allows the user to:
+\begin{itemize}
+	\item ~[A]ppend or [D]elete a constraint.
+	\item ~[T]est if an expression is implied by the system.
+	\item ~Obtain the [R]oot expressions of the system.
+	\item ~[S]how the generated expression of the Schweighofer Tester.
+	\item ~Show the Schweighofer Tester [m]onomials generated.
+	\item ~[C]hange the degree (number of multiplications) the Schweighofer Tester multiply all system constraints against all others.
+\end{itemize}
+
+\end{document}

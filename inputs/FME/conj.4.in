@@ -1,0 +1,1 @@
+[n,m,H]->[i,ii,jj,j]:H>0&i>=1&ii>=1&j>=1&jj>=1&n-i>=1&n-ii>=1&m-j>=1&m-jj>=1&jj-j>=1&i-ii>=1&H*i+j-H*ii-jj+1==0;

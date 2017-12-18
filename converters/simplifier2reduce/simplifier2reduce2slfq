@@ -1,0 +1,1 @@
+for i in $(simplifier2reduce $@ | reduce | awk '/false/{print "Ignore false" > "/dev/stderr"; next;} /ans=/{print "Entry: " $0 > "/dev/stderr"; sub(/.*ans=/,"["); gsub(/\./, ""); gsub(/\*\*/, "^"); gsub(/ and /, " /\\ "); gsub(/ or /, " \\/ "); gsub(/\s+/, ""); print "Output: " $0 "]" > "/dev/stderr"; print $0 "]"} '); do echo "======================"; echo $i | slfq & done

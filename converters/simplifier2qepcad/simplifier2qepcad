@@ -1,0 +1,2 @@
+[ $# -ge 1 -a -f "$1" ] && input="$@" || input="-"
+awk -F '(->)|:' '/:/{gsub(/[\]\[; ]/, ""); gsub(/==/, "="); gsub(/\*/, " "); gsub(/\&/, " /\\ "); E="(E " $2 ")"; gsub(/,/, ")(E ", E); print "[" ARGV[ARGIND] ":" FNR "]"; print"(" $1 "," $2 ")";print split($1, a, ","); print E "[" $3 "]."; print "finish"; print ""} ' $input

@@ -1,0 +1,1 @@
+[m,n,A,B] -> [i,j,k,ii,kk,jj]: 1 + ii <= m & 1 + i <= m & 1 + kk <= m & 1 + k <= m & 1 + j <= n & 1 + jj <= n & 1 + ii <= kk & 1 + i <= ii & 1 + i <= k & 1 + jj <= j & m*k + A + i <= n*ii + B + jj & n*ii + B + jj <= m*k + A + i & 0 <= ii & 0 <= i & 0 <= j & jj <= j & kk <= k & 0 <= jj;

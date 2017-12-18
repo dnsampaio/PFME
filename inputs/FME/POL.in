@@ -1,0 +1,1 @@
+[n]->[i,j,kk,ii,jj,k]:k >= 0 &n > k &i >= 0 &k > i &j > k &n > j &kk >= 0 &n > kk &ii >= 0 &kk > ii &jj > kk &n > jj &kk > k &i > ii &n >= 0 &j*(j+1)+2*i == kk*(kk+1)+2*ii;

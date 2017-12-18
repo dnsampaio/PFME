@@ -1,0 +1,1 @@
+[tsteps,n,u,v,p,q] -> [t,i,j,jj,ii,tt]: 2 + i <= n & 2 + ii <= n & 1 <= t & 1 <= i & 1 <= ii & 1 <= tt & t <= tsteps & tt <= tsteps & n + n*i + q <= n^2 + v + ii & n^2 + v + ii <= n + n*i + q & t <= tt & tt <= t & i <= ii & ii <= i;
