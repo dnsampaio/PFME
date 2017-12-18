@@ -1,9 +1,0 @@
-\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
-\BOOKMARK [0][-]{chapter.2}{Access to it}{}% 2
-\BOOKMARK [1][-]{section.2.1}{Code access and description}{chapter.2}% 3
-\BOOKMARK [1][-]{section.2.2}{Compiling requirements}{chapter.2}% 4
-\BOOKMARK [0][-]{chapter.3}{How to use}{}% 5
-\BOOKMARK [1][-]{section.3.1}{Fourier-Motzkin elimination}{chapter.3}% 6
-\BOOKMARK [2][-]{subsection.3.1.1}{Inputs}{section.3.1}% 7
-\BOOKMARK [2][-]{subsection.3.1.2}{Input format}{section.3.1}% 8
-\BOOKMARK [1][-]{section.3.2}{Schweighofer Tester}{chapter.3}% 9
