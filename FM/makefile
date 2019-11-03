@@ -1,16 +1,16 @@
-CPP=clang++
+CPP=g++
 
 #CPP=/home/undead/intel/bin/icpc
 LINKEXTRA=-Wl,--no-as-needed
 
 #Verbosity: Set variable |DEB_LVL| range: 0 - 11
 #=====> Release <=========================
-CXXEXTRA=-g0 -fmessage-length=0 -march=native -mtune=native -Wall -Wextra -pedantic -Werror -Ofast
-VERBOSE=-DNDEBUG
+CXXEXTRA=-ggdb3 -fmessage-length=0 -march=native -mtune=native -Wall -Wextra -pedantic -Werror -Ofast
+#VERBOSE=-DNDEBUG
 
 #=====> Debug   <=========================
 #CXXEXTRA=-g3 -O0 -fmessage-length=0 -Wall -Wextra -pedantic -Werror
-#VERBOSE=-DDEB_LVL=6
+VERBOSE=-DDEB_LVL=127
 #CXXEXTRA=-ggdb3
 #======================================================================================================================================================
 BASE=-std=c++11
@@ -75,7 +75,7 @@ interactive: $(IOBJS)
 	${CPP} -DINTERACTIVE_MODE ${LINK_FLAGS} ${CXXFLAGS} -o $@ $(IOBJS)
 
 instrumented: $(SRCS) *.hpp
-	clang++ -std=c++11 -g -fxray-instrument -lcln -lginac -ldl -w -O2 -DNDEBUG -o $@ $(SRCS)
+	${CPP} -std=c++11 -g -fxray-instrument -lcln -lginac -ldl -w -O2 -DNDEBUG -o $@ $(SRCS)
 
 simplify: $(SCR_OBJS)
 	${CPP} ${LINK_FLAGS} ${CXXFLAGS} -o $@ $(SCR_OBJS)

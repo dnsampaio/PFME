@@ -1,0 +1,6 @@
+*.o
+FM/Simplifier
+FM/simplify
+FM/st
+*.swp
+.vscode
