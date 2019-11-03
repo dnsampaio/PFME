@@ -104,17 +104,23 @@ public:
   bool empty() const;
   unsigned id() const { return _id; };
   void detectEqs() {
-    for (const cc &c : ineqs) {
-      DEBUG(9, "Check if " << c << " generates an equality\n");
-      cc iC = Constraint::get(-c->exp, false);
-      if (ineqs.find(iC) == ineqs.end())
-        continue;
-      eqs.insert(Constraint::get(c->exp, true));
-      ineqs.erase(iC);
-      ineqs.erase(c);
+    // TODO: Make a better implementation of the loop
+    //      Also check existing equalities
+    //      Avoid creating constraints, as their creation cost grows
+    for (bool HasChanges = true; HasChanges; HasChanges = false) {
+      for (const cc &c : ineqs) {
+        DEBUG(9, "Check if " << c << " generates an equality\n");
+        cc iC = Constraint::get(-c->exp, false);
+        if (ineqs.find(iC) == ineqs.end())
+          continue;
+        eqs.insert(Constraint::get(c->exp, true));
+        ineqs.erase(iC);
+        ineqs.erase(c);
+        HasChanges = true;
+        break;
+      }
     }
   }
-
   int polynomialDegree(const ex &e, bool considerPars = true) const {
     if (is_a<numeric>(e))
       return 0;

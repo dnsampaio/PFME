@@ -20,14 +20,16 @@ Constraint::cc Constraint::get(const int id) {
 }
 
 Constraint::cc Constraint::get(const ex &expr, bool isEq) {
-  if (obvious(expr, isEq))
+  if (obvious(expr, isEq)) {
     return &trueC;
+  }
 
-  if (absurd(expr, isEq))
+  if (absurd(expr, isEq)) {
     return &falseC;
+  }
 
   ex x = expand(expr);
-
+  // TODO: Why of this??????????
   bool r = divide(x, x.integer_content(), x);
   if (!r) {
     assert(false);
@@ -63,6 +65,7 @@ Constraint::cc Constraint::get(const ex &expr, bool isEq) {
   }
 
   int id = nId++;
+  DEBUG(10, id << "\n" << exp << "\n");
   // Always create the negation
   if (not isEq) {
     constraints.insert({-id, {-exp - 1, -id, false}});

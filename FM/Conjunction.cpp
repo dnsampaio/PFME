@@ -171,29 +171,27 @@ Conjunction::Conjunction(string &in) : tester(nullptr), _id(counter++) {
       ineqs.insert(c);
     }
   }
-  {
-    cc c = Constraint::get(constraintsStr);
-    if (c == Constraint::getFalse()) {
-      DEBUG(1, "FALSE\n");
-      makeFalse();
-      return;
-    }
-    if (c != Constraint::getTrue()) {
-      if (c->eq)
-        eqs.insert(c);
-      else {
-        if (ineqs.find(c->getNot()) != ineqs.end()) {
-          cerr << "Holding " << c << " and " << c->getNot()
-               << " makes the system empty.\n";
-          makeFalse();
-          return;
-        }
-        ineqs.insert(c);
+  cc c = Constraint::get(constraintsStr);
+  if (c == Constraint::getFalse()) {
+    DEBUG(1, "FALSE\n");
+    makeFalse();
+    return;
+  }
+  if (c != Constraint::getTrue()) {
+    if (c->eq)
+      eqs.insert(c);
+    else {
+      if (ineqs.find(c->getNot()) != ineqs.end()) {
+        cerr << "Holding " << c << " and " << c->getNot()
+             << " makes the system empty.\n";
+        makeFalse();
+        return;
       }
+      ineqs.insert(c);
     }
   }
 
-  //  buildTester();
+  DEBUG(4, "Input system is:\n" << *this << NL);
   detectEqs();
   if (empty()) {
     *this = obvious;

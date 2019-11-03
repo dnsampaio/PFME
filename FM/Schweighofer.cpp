@@ -611,10 +611,10 @@ void SchweighoferTester::gatherMonomials(const ex &ineq,
 }
 
 // TODO: 1: Remove constant from ineq map, ex: 4x + 3yz -2 >= 0; remove the
-// numerical [ -2 ] value. 2: Keep map of these new expressions to their relative
-// numeric value: map[4x + 3yz] = -2 3: When testing 4x + 3yz -1, we also
-// decompose as [4x + 3yz][-1]. As the tester has that map[[4x + 3yz] = -2 < -1,
-// our starting test value is already {GTZ, 1}.
+// numerical [ -2 ] value. 2: Keep map of these new expressions to their
+// relative numeric value: map[4x + 3yz] = -2 3: When testing 4x + 3yz -1, we
+// also decompose as [4x + 3yz][-1]. As the tester has that map[[4x + 3yz] = -2
+// < -1, our starting test value is already {GTZ, 1}.
 
 void SchweighoferTester::expandSrcs(const exset &root, idx_map &indexes) {
   map<int, exset> expanded;

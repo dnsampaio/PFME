@@ -5,12 +5,12 @@ LINKEXTRA=-Wl,--no-as-needed
 
 #Verbosity: Set variable |DEB_LVL| range: 0 - 11
 #=====> Release <=========================
-CXXEXTRA=-ggdb3 -fmessage-length=0 -march=native -mtune=native -Wall -Wextra -pedantic -Werror -Ofast
-#VERBOSE=-DNDEBUG
+CXXEXTRA=-g0 -fmessage-length=0 -Wall -Wextra -pedantic -Werror -Ofast -march=native -mtune=native
+VERBOSE=-DNDEBUG
 
 #=====> Debug   <=========================
 #CXXEXTRA=-g3 -O0 -fmessage-length=0 -Wall -Wextra -pedantic -Werror
-VERBOSE=-DDEB_LVL=127
+#VERBOSE=-DDEB_LVL=0
 #CXXEXTRA=-ggdb3
 #======================================================================================================================================================
 BASE=-std=c++11

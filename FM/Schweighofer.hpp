@@ -38,13 +38,13 @@ typedef gexmap<unsigned> sysType;
 
 enum SIGN : unsigned char { // Possible signs our system S implies for a tested
                             // expression E'
-  UNKNOWN = 0, // Nor E or E' detected to be implied
-  ZERO = 1,    // E' and -E' are both implied by the system by zero distance
-  GTZ = 2,     // E' is implied by S by a distance > 0
-  GEZ = 3,     // E' is implied by S by a distance = 0
-  LTZ = 4,     //-E' is implied by S by a distance > 0
-  LEZ = 5,     //-E' is implied by S by a distance = 0
-  ABSURD = 7   // E' -c0 and -E' -c1 are both implied by the system, where at
+  UNKNOWN = 0,              // Nor E or E' detected to be implied
+  ZERO = 1,  // E' and -E' are both implied by the system by zero distance
+  GTZ = 2,   // E' is implied by S by a distance > 0
+  GEZ = 3,   // E' is implied by S by a distance = 0
+  LTZ = 4,   //-E' is implied by S by a distance > 0
+  LEZ = 5,   //-E' is implied by S by a distance = 0
+  ABSURD = 7 // E' -c0 and -E' -c1 are both implied by the system, where at
              // least one of c0 or c1 is greater than zero.
 };
 
@@ -73,8 +73,8 @@ private:
   testResult test_factorized(ex ineq);
   bool goodNumbers(const ex &compareTo)
       const; // Hack: The simplex algorithm might be interrupted due
-             // iteration/time limits, but it might already have good values (all
-             // columns >= 0). Use this to test such cases.
+             // iteration/time limits, but it might already have good values
+             // (all columns >= 0). Use this to test such cases.
   bool isProved(int o, bool isExact = false, const ex &compareTo = 0) const;
   typedef map<int, map<int, double>>
       idx_map; // Maps monomials coefficients per expression. In Column x Row
@@ -89,8 +89,8 @@ private:
   glp_prob *problem;
   exPos monomPos; // Holds monomial positions on the glpk problem (row number)
   exPos ineqPos;  // Holds expressions position on the glpk problem (column
-                 // number) !!!!!PS!!!! We do not hold numeric values. For
-                 // example: 4N-3x+2 will turn into 4N-3x.
+                  // number) !!!!!PS!!!! We do not hold numeric values. For
+                  // example: 4N-3x+2 will turn into 4N-3x.
   unsigned order;
   unsigned MAX_ORDER;
   unsigned shrinkIterations;
